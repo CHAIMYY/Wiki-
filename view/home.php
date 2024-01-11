@@ -1,18 +1,10 @@
 <?php
-require_once('controller/usercontroller.php');
-require_once('controller/wikiController.php');
-require_once('controller/tagController.php');
-require_once('controller/categorieController.php');
-session_start();
+require_once('../controller/usercontroller.php');
 $user = new usercontroller();
-$result = $user->checkRoleAdmin();
-$result2 = $user->checkRoleAuteur();
-$wiki = new wikiController();
-$w = $wiki->displayAllWikis();
-$wiki->archiveWiki();
-$wikiData = $wiki->detailsWikis();
+$user->isLoggedIn('auteur');
+$user->login();
+$user->logout();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,7 +15,6 @@ $wikiData = $wiki->detailsWikis();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
-    <link rel="icon" href="img/wikipedia.png" type="image/png">
     <title>Wiki™</title>
 </head>
 
@@ -32,12 +23,58 @@ $wikiData = $wiki->detailsWikis();
 
 <body class="bg-gray-100">
 
-    <div class="bg-white shadow-md">
-        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between py-3">
-            <!-- Logo -->
-            <div class="flex items-center space-x-4 sm:space-x-10">
-                <img src="" alt="">
+    <div class="min-h-screen flex flex-col sm:flex-row bg-gray-100">
 
+        <!-- Sidebar -->
+        <div class="flex flex-col sm:w-56 bg-white rounded-r-3xl overflow-hidden">
+            <div class="flex items-center justify-center h-20 shadow-md">
+                <img src="../img/logoWiki.png" class="w-[120px]" alt="">
+            </div>
+
+            <ul class="flex flex-col py-4">
+                <li>
+                    <a href="#" class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800">
+                        <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400"><i class="bx bx-home"></i></span>
+                        <span class="text-sm font-medium">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="wikis.php" class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800">
+                        <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400"><i class="bx bxl-wikipedia"></i></span>
+                        <span class="text-sm font-medium">My Wikis</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../index.php" class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800">
+                        <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400"><i class="bx bx-book-open"></i></span>
+                        <span class="text-sm font-medium">All Wikis</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="dashboard.php?deconn" class="flex flex-row items-center h-12 transform hover:translate-x-2 transition-transform ease-in duration-200 text-gray-500 hover:text-gray-800">
+                        <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400"><i class="bx bx-log-out"></i></span>
+                        <span class="text-sm font-medium">Logout</span>
+                    </a>
+                </li>
+            </ul> <!-- Your existing menu items go here -->
+            <!-- ... -->
+
+            <!-- Responsive Navigation Icon -->
+            <li class="sm:hidden">
+                <button id="menu-toggle" class="flex items-center h-12 text-gray-500 hover:text-gray-800">
+                    <span class="inline-flex items-center justify-center h-12 w-12 text-lg text-gray-400">
+                        <i class="bx bx-menu"></i>
+                    </span>
+                    <span class="text-sm font-medium">Menu</span>
+                </button>
+            </li>
+            </ul>
+        </div>
+
+        <!-- Content -->
+        <div class="flex-grow p-4">
+
+    
                 <!-- Search Bar -->
                 <div class="relative">
                     <input type="text" placeholder="Search wikis..." class="border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring focus:border-blue-500 w-96">
@@ -338,13 +375,10 @@ $wikiData = $wiki->detailsWikis();
                 </div>
             </div>
         </div>
-    </section>
 
 
 
-
-
-    </div>
+        </div>
 
 
 
@@ -352,54 +386,6 @@ $wikiData = $wiki->detailsWikis();
     </div>
     </div>
 
-
-
-
-    <script>
-        var wikisContent = document.getElementById('wikisContent').innerHTML;
-
-        function loadContent(category) {
-            if (category === 'Wikis') {
-                document.getElementById('wikisContent').style.display = 'flex';
-                document.getElementById('categoriesContent').style.display = 'none';
-                document.querySelector('.categoriesButton').classList.remove('bg-blue-400');
-                document.querySelector('.wikisButton').classList.add('bg-blue-400');
-            } else if (category === 'Categories') {
-                document.getElementById('wikisContent').style.display = 'none';
-                document.getElementById('categoriesContent').style.display = 'flex';
-                document.querySelector('.wikisButton').classList.remove('bg-blue-400');
-                document.querySelector('.categoriesButton').classList.add('bg-blue-400');
-            }
-        }
-
-
-        document.querySelector('.categoriesButton').addEventListener('click', function() {
-            loadContent('Categories');
-        });
-
-        document.querySelector('.wikisButton').addEventListener('click', function() {
-            loadContent('Wikis');
-        });
-
-        loadContent('Wikis');
-
-        document.querySelectorAll('.editProjectButton').forEach(button => {
-            button.addEventListener('click', function() {
-                showEditProjectForm(button);
-            });
-        });
-
-
-        function showEditProjectForm(button) {
-            var editProjectForm = document.getElementById('authentication-modal');
-            if (editProjectForm) {
-                editProjectForm.querySelector('#editWikiId').value = button.dataset.projectId || '';
-                editProjectForm.querySelector('#editName').value = button.dataset.projectName || '';
-                editProjectForm.querySelector('#editdescription').value = button.dataset.projectDescription || '';
-
-            }
-        }
-    </script>
 
 </body>
 
