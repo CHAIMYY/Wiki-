@@ -2,7 +2,7 @@
 
 define('DB_HOST', 'localhost');
 
-define('DB_NAME', 'wikid');
+define('DB_NAME', 'wiki');
 
 define('DB_USER', 'root');
 
