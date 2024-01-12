@@ -35,7 +35,7 @@ $cat->deleteCategorie();
         <!-- Sidebar -->
         <div class="flex flex-col sm:w-56 bg-white rounded-r-3xl overflow-hidden">
             <div class="flex items-center justify-center h-20 shadow-md">
-                <h1 class="text-3xl uppercase text-indigo-500">Logo</h1>
+                <h1 class="text-3xl  text-black-500">WIKI</h1>
             </div>
 
             <ul class="flex flex-col py-4">

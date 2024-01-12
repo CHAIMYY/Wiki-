@@ -57,7 +57,7 @@ $wikiData = $wiki->detailsWikis();
 
                 </a>
                 <a href="./view/register.php">
-                    <button class="bg-green-500 text-white px-4 py-2 rounded-lg">Sign Up</button>
+                    <button class="bg-white-500 text-black px-4 py-2 rounded-lg">Sign Up</button>
 
                 </a>
             </div>
